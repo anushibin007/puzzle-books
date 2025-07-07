@@ -133,15 +133,35 @@ class RelativeSudokuPDFGenerator:
                     cy = y0 + (8-r)*cell + cell/2 - dims['font_number']/3
                     c.drawCentredString(cx, cy, str(v))
                     
-    def draw_difficulty_badge(self, c, difficulty_label, dims):
-        x = self.page_width - dims['margin_h'] - dims['qr_size']  # align to right
-        for y in (dims['diff_y_top'], dims['diff_y_middle'], dims['diff_y_bottom']):
-            c.setFillColor(self._badge_color(difficulty_label))
-            c.rect(x, y - dims['font_diff']/2, dims['qr_size'], dims['font_diff'], fill=1)
-            c.setFillColor(colors.white)
-            c.setFont("Helvetica-Bold", dims['font_diff']*0.8)
-            c.drawCentredString(x + dims['qr_size']/2, y - dims['font_diff']/2 + (dims['font_diff']*0.8)/4,
-                                difficulty_label.upper())
+    def draw_difficulty_badge(self, c, dims, difficulty_label):
+        # Badge width is the vertical text height (font size), badge height is the vertical bar length
+        badge_width = dims['font_diff']
+        badge_height = dims['qr_size']  # or set as desired
+
+        # Choose Y based on difficulty
+        if difficulty_label.lower() == 'easy':
+            y = dims['diff_y_top']
+        elif difficulty_label.lower() == 'medium':
+            y = dims['diff_y_middle']
+        elif difficulty_label.lower() == 'hard':
+            y = dims['diff_y_bottom']
+        else:
+            y = dims['diff_y_top']  # fallback
+
+        # Move badge flush to the right edge
+        x = self.page_width - badge_width
+
+        # Draw vertical badge (rotated)
+        c.saveState()
+        c.translate(x + badge_width / 2, y)
+        c.rotate(90)
+        c.setFillColor(self._badge_color(difficulty_label))
+        c.rect(-badge_height / 2, -badge_width / 2, badge_height, badge_width, fill=1)
+        c.setFillColor(colors.white)
+        c.setFont("Helvetica-Bold", badge_width * 0.8)
+        c.drawCentredString(0, -badge_width * 0.2, difficulty_label.upper())
+        c.restoreState()
+
             
     def _badge_color(self, label):
         return {'easy': colors.green, 'medium': colors.orange, 'hard': colors.red}.get(label.lower(), colors.gray)
@@ -158,11 +178,6 @@ class RelativeSudokuPDFGenerator:
 
     def create_page(self, c, pid, pdata, pnum):
         dims = self.compute_dimensions()
-        # TODO: Figure out how to fix this
-        # try:
-        #     self.draw_difficulty_badge(c, pdata['d'], dims)
-        # except Exception as e:
-        #     print(f"Error drawing badge: {e}")
         # Title
         c.setFont("Helvetica-Bold", dims['font_title'])
         c.drawCentredString(self.page_width/2, dims['header_y'], "Sudoku Puzzle")
@@ -192,6 +207,8 @@ class RelativeSudokuPDFGenerator:
         # Page #
         c.setFont("Helvetica", dims['font_pagenum'])
         c.drawCentredString(self.page_width/2, dims['page_num_y'], f"— {pnum} —")
+        # Badge on right edge of page
+        self.draw_difficulty_badge(c, dims, pdata['d'])
         
     def draw_small_grid(self, c, grid, x0, y0, cell):
         """Draw a small solution grid."""
