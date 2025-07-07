@@ -119,7 +119,7 @@ def remove_cells(board, difficulty):
     return board
 
 def board_to_question(board):
-    return [[cell if cell != 0 else 'x' for cell in row] for row in board]
+    return [[cell if cell != 0 else 0 for cell in row] for row in board]
 
 def generate_sudoku_puzzle(difficulty):
     complete = generate_complete_sudoku()
@@ -134,9 +134,9 @@ def generate_sudoku_set(count, difficulty):
         question, answer = generate_sudoku_puzzle(difficulty)
         key = f"sudoku-{difficulty}-{i}"
         result[key] = {
-            "question": question,
-            "answer": answer,
-            "difficulty": difficulty
+            "q": question,
+            "a": answer,
+            "d": difficulty
         }
     return result
 
