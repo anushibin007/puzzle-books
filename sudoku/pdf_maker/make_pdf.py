@@ -5,6 +5,7 @@ from io import BytesIO
 from reportlab.lib.units import inch
 from reportlab.pdfgen import canvas
 from reportlab.lib.utils import ImageReader
+from reportlab.lib import colors
 
 class RelativeSudokuPDFGenerator:
     def __init__(self,
@@ -86,7 +87,7 @@ class RelativeSudokuPDFGenerator:
         
         header_y = ph - mv  # common top‐of‐page header Y
 
-        return {
+        dims = {
             'margin_h'      : mh,
             'margin_v'      : mv,
             'grid_size'     : gs,
@@ -105,6 +106,13 @@ class RelativeSudokuPDFGenerator:
             'font_fact'     : ph * f['font_fact'],
             'font_pagenum'  : ph * f['font_pagenum'],
         }
+        
+        # three vertical positions for difficulty badge:
+        dims['diff_y_top']    = ph - mv - dims['font_diff']/2
+        dims['diff_y_middle'] = ph/2
+        dims['diff_y_bottom'] = mv + dims['font_diff']/2
+        
+        return dims
 
     def draw_grid(self, c, grid, dims):
         cell = dims['cell_size']
@@ -124,6 +132,19 @@ class RelativeSudokuPDFGenerator:
                     cx = x0 + col*cell + cell/2
                     cy = y0 + (8-r)*cell + cell/2 - dims['font_number']/3
                     c.drawCentredString(cx, cy, str(v))
+                    
+    def draw_difficulty_badge(self, c, difficulty_label, dims):
+        x = self.page_width - dims['margin_h'] - dims['qr_size']  # align to right
+        for y in (dims['diff_y_top'], dims['diff_y_middle'], dims['diff_y_bottom']):
+            c.setFillColor(self._badge_color(difficulty_label))
+            c.rect(x, y - dims['font_diff']/2, dims['qr_size'], dims['font_diff'], fill=1)
+            c.setFillColor(colors.white)
+            c.setFont("Helvetica-Bold", dims['font_diff']*0.8)
+            c.drawCentredString(x + dims['qr_size']/2, y - dims['font_diff']/2 + (dims['font_diff']*0.8)/4,
+                                difficulty_label.upper())
+            
+    def _badge_color(self, label):
+        return {'easy': colors.green, 'medium': colors.orange, 'hard': colors.red}.get(label.lower(), colors.gray)
 
     def wrap_text(self, c, txt, max_w, font, size):
         words, lines, line = txt.split(), [], ""
@@ -137,12 +158,18 @@ class RelativeSudokuPDFGenerator:
 
     def create_page(self, c, pid, pdata, pnum):
         dims = self.compute_dimensions()
+        # TODO: Figure out how to fix this
+        # try:
+        #     self.draw_difficulty_badge(c, pdata['d'], dims)
+        # except Exception as e:
+        #     print(f"Error drawing badge: {e}")
         # Title
         c.setFont("Helvetica-Bold", dims['font_title'])
         c.drawCentredString(self.page_width/2, dims['header_y'], "Sudoku Puzzle")
         # ID & difficulty
         c.setFont("Helvetica", dims['font_diff'])
         c.drawCentredString(self.page_width/2, dims['difficulty_y'], f"{pid} ({pdata['d']})")
+        
         # Grid
         self.draw_grid(c, pdata['q'], dims)
         # QR
