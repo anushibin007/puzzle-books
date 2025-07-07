@@ -8,6 +8,8 @@ from reportlab.lib.pagesizes import A5
 from reportlab.lib.units import inch, mm
 from reportlab.lib import colors
 from reportlab.pdfgen import canvas
+from reportlab.lib.utils import ImageReader
+
 
 class SudokuPDFGeneratorA5:
     def __init__(self, template_config=None):
@@ -18,7 +20,7 @@ class SudokuPDFGeneratorA5:
         """Optimized configuration for A5 size with centered layout"""
         return {
             'show_page_numbers': True,
-            'show_qr_codes': False,
+            'show_qr_codes': True,
             'show_random_facts': True,
             'grid_size': 360,      # Optimized for A5
             'cell_size': 40,       # 360/9 = 40 points per cell
@@ -35,16 +37,23 @@ class SudokuPDFGeneratorA5:
         }
     
     def generate_qr_code(self, puzzle_id):
-        """Generate QR code for puzzle ID"""
+        """Generate QR code for puzzle ID pointing to your site URL."""
+        url = (
+            "https://book.fastorial.dev/puzzle-books"
+            "?category=sudoku"
+            "&volume=1"
+            f"&puzzle={puzzle_id}"
+        )
         qr = qrcode.QRCode(version=1, box_size=3, border=1)
-        qr.add_data(f"Sudoku: {puzzle_id}")
+        qr.add_data(url)
         qr.make(fit=True)
-        
+
         img = qr.make_image(fill_color="black", back_color="white")
         buffer = BytesIO()
         img.save(buffer, format='PNG')
         buffer.seek(0)
         return buffer
+
     
     def get_random_fact(self):
         """Get a random fact for the page"""
@@ -168,11 +177,19 @@ class SudokuPDFGeneratorA5:
         canvas_obj.setFillColor(colors.black)
         self.draw_sudoku_grid(canvas_obj, puzzle_data['q'], pos['grid_x'], pos['grid_y'])  # Changed from 'question' to 'q'
         
-        # QR Code - top right corner (if enabled)
+        # QR Code – wrap BytesIO in ImageReader
         if config['show_qr_codes']:
-            qr_buffer = self.generate_qr_code(puzzle_id)
-            canvas_obj.drawImage(qr_buffer, pos['qr_x'], pos['qr_y'], 
-                               width=config['qr_size'], height=config['qr_size'])
+            qr_buffer = self.generate_qr_code(puzzle_id)  # returns BytesIO
+            qr_img = ImageReader(qr_buffer)               # wrap for ReportLab
+            canvas_obj.drawImage(
+                qr_img,
+                pos['qr_x'],
+                pos['qr_y'],
+                width=config['qr_size'],
+                height=config['qr_size'],
+                preserveAspectRatio=True,
+                mask='auto'
+            )
         
         # Random fact - bottom area, centered (if enabled)
         if config['show_random_facts']:
@@ -222,7 +239,7 @@ if __name__ == "__main__":
     # Custom A5 configuration for optimal layout
     a5_config = {
         'show_page_numbers': True,
-        'show_qr_codes': False,
+        'show_qr_codes': True,
         'show_random_facts': True,
         'grid_size': 360,
         'cell_size': 40,
