@@ -135,8 +135,10 @@ class RelativeSudokuPDFGenerator:
                     
     def draw_difficulty_badge(self, c, dims, difficulty_label):
         # Badge width is the vertical text height (font size), badge height is the vertical bar length
-        badge_width = dims['font_diff']
-        badge_height = dims['qr_size']  # or set as desired
+        # anushibin007 - We are hardcoding some values
+        # here just so that we can have it constant for all the badges
+        badge_width = dims['font_diff'] + 10
+        badge_height = 75
 
         # Choose Y based on difficulty
         if difficulty_label.lower() == 'easy':
@@ -149,7 +151,8 @@ class RelativeSudokuPDFGenerator:
             y = dims['diff_y_top']  # fallback
 
         # Move badge flush to the right edge
-        x = self.page_width - badge_width
+        # The +2 is just to give that bleeding edge effect
+        x = self.page_width - badge_width + 2
 
         # Draw vertical badge (rotated)
         c.saveState()
@@ -158,7 +161,7 @@ class RelativeSudokuPDFGenerator:
         c.setFillColor(self._badge_color(difficulty_label))
         c.rect(-badge_height / 2, -badge_width / 2, badge_height, badge_width, fill=1)
         c.setFillColor(colors.white)
-        c.setFont("Helvetica-Bold", badge_width * 0.8)
+        c.setFont("Helvetica-Bold", dims['font_diff'])
         c.drawCentredString(0, -badge_width * 0.2, difficulty_label.upper())
         c.restoreState()
 
