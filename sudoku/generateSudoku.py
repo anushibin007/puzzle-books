@@ -132,7 +132,7 @@ def generate_sudoku_set(count, difficulty):
     result = {}
     for i in range(1, count+1):
         question, answer = generate_sudoku_puzzle(difficulty)
-        key = f"sudoku-{difficulty}-{i}"
+        key = f"sdk-v1-{i}"
         result[key] = {
             "q": question,
             "a": answer,
