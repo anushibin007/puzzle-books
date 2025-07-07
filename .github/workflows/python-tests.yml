@@ -24,4 +24,4 @@ jobs:
             - name: Run Sudoku unit tests
               run: |
                   # If you use unittest and your tests are test*.py
-                  python -m unittest discover -s ./sudoku -p "test*.py"
+                  cd sudoku && python -m unittest discover -s . -p "test*.py"
