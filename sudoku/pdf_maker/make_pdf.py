@@ -7,33 +7,31 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.utils import ImageReader
 from reportlab.lib import colors
 
+
 class RelativeSudokuPDFGenerator:
-    def __init__(self,
-                 page_width_pt,
-                 page_height_pt,
-                 template_factors=None):
+    def __init__(self, page_width_pt, page_height_pt, template_factors=None):
         """
         page_width_pt, page_height_pt: page size in points (1 pt = 1/72 inch)
         template_factors: dict of relative proportions (all values 0–1)
         """
-        self.page_width  = page_width_pt
+        self.page_width = page_width_pt
         self.page_height = page_height_pt
 
         # Default proportional factors
         defaults = {
-            'margin_h':           0.05,   # 5% of page width
-            'margin_v':           0.10,   # 10% of page height
-            'grid_scale':         0.80,   # grid occupies 100% of min(width,height)
-            'title_height':       0.08,   # 8% of page height for title block
-            'difficulty_height':  0.01,   # 5% of page height for difficulty text
-            'qr_scale':           0.12,   # 12% of page width for QR-code
-            'fact_height':        0.06,   # 6% of page height for fact area
-            'page_num_height':    0.03,   # 3% of page height for page number area
-            'font_title':         0.05,   # 5% of page height as font size
-            'font_difficulty':    0.03,   # 3% of page height
-            'font_number':        0.04,   # 4% of page height for grid numbers
-            'font_fact':          0.02,  # 2.5% of page height
-            'font_pagenum':       0.025,  # 2.5% of page height
+            "margin_h": 0.05,  # 5% of page width
+            "margin_v": 0.10,  # 10% of page height
+            "grid_scale": 0.80,  # grid occupies 100% of min(width,height)
+            "title_height": 0.08,  # 8% of page height for title block
+            "difficulty_height": 0.01,  # 5% of page height for difficulty text
+            "qr_scale": 0.12,  # 12% of page width for QR-code
+            "fact_height": 0.06,  # 6% of page height for fact area
+            "page_num_height": 0.03,  # 3% of page height for page number area
+            "font_title": 0.05,  # 5% of page height as font size
+            "font_difficulty": 0.03,  # 3% of page height
+            "font_number": 0.04,  # 4% of page height for grid numbers
+            "font_fact": 0.02,  # 2.5% of page height
+            "font_pagenum": 0.025,  # 2.5% of page height
         }
         self.factors = {**defaults, **(template_factors or {})}
 
@@ -45,10 +43,12 @@ class RelativeSudokuPDFGenerator:
             f"&puzzle={puzzle_id}"
         )
         qr = qrcode.QRCode(box_size=2, border=1)
-        qr.add_data(url); qr.make(fit=True)
+        qr.add_data(url)
+        qr.make(fit=True)
         img = qr.make_image(fill_color="black", back_color="white")
         buf = BytesIO()
-        img.save(buf, format='PNG'); buf.seek(0)
+        img.save(buf, format="PNG")
+        buf.seek(0)
         return ImageReader(buf)
 
     def get_random_fact(self):
@@ -68,87 +68,99 @@ class RelativeSudokuPDFGenerator:
         # If no suitable fact found after retries, return a fallback short message
         return "Enjoy your Sudoku!"
 
-
     def compute_dimensions(self):
         f = self.factors
         pw, ph = self.page_width, self.page_height
 
         # Margins
-        mh = pw * f['margin_h']
-        mv = ph * f['margin_v']
+        mh = pw * f["margin_h"]
+        mv = ph * f["margin_v"]
 
         # Grid size: based on smaller of page dims
-        grid_max = min(pw - 2*mh, ph - 2*mv - ph*(f['title_height']+f['difficulty_height']+f['fact_height']+f['page_num_height']))
-        gs = grid_max * f['grid_scale']
+        grid_max = min(
+            pw - 2 * mh,
+            ph
+            - 2 * mv
+            - ph
+            * (
+                f["title_height"]
+                + f["difficulty_height"]
+                + f["fact_height"]
+                + f["page_num_height"]
+            ),
+        )
+        gs = grid_max * f["grid_scale"]
 
         # Positions
         x_center = pw / 2
         y_center = ph / 2
-        
+
         header_y = ph - mv  # common top‐of‐page header Y
 
         dims = {
-            'margin_h'      : mh,
-            'margin_v'      : mv,
-            'grid_size'     : gs,
-            'cell_size'     : gs / 9,
-            'header_y':   header_y,
-            'difficulty_y'  : ph - mv - ph * f['title_height'],
-            'grid_x'        : (pw - gs) / 2,
-            'grid_y'        : (ph - gs) / 2,
-            'qr_size'       : pw * f['qr_scale'],
-            'qr_x'          : pw - mh - pw * f['qr_scale'],
-            'fact_y'        : mv + ph * f['page_num_height'],
-            'page_num_y'    : mv / 2,
-            'font_title'    : ph * f['font_title'],
-            'font_diff'     : ph * f['font_difficulty'],
-            'font_number'   : ph * f['font_number'],
-            'font_fact'     : ph * f['font_fact'],
-            'font_pagenum'  : ph * f['font_pagenum'],
+            "margin_h": mh,
+            "margin_v": mv,
+            "grid_size": gs,
+            "cell_size": gs / 9,
+            "header_y": header_y,
+            "difficulty_y": ph - mv - ph * f["title_height"],
+            "grid_x": (pw - gs) / 2,
+            "grid_y": (ph - gs) / 2,
+            "qr_size": pw * f["qr_scale"],
+            "qr_x": pw - mh - pw * f["qr_scale"],
+            "fact_y": mv + ph * f["page_num_height"],
+            "page_num_y": mv / 2,
+            "font_title": ph * f["font_title"],
+            "font_diff": ph * f["font_difficulty"],
+            "font_number": ph * f["font_number"],
+            "font_fact": ph * f["font_fact"],
+            "font_pagenum": ph * f["font_pagenum"],
         }
-        
+
         # three vertical positions for difficulty badge:
-        dims['diff_y_top']    = ph - mv - dims['font_diff']/2
-        dims['diff_y_middle'] = ph/2
-        dims['diff_y_bottom'] = mv + dims['font_diff']/2
-        
+        dims["diff_y_top"] = ph - mv - dims["font_diff"] / 2
+        dims["diff_y_middle"] = ph / 2
+        dims["diff_y_bottom"] = mv + dims["font_diff"] / 2
+
         return dims
 
     def draw_grid(self, c, grid, dims):
-        cell = dims['cell_size']
-        x0, y0 = dims['grid_x'], dims['grid_y']
+        cell = dims["cell_size"]
+        x0, y0 = dims["grid_x"], dims["grid_y"]
         # grid lines
         for i in range(10):
             lw = 1.5 if i % 3 == 0 else 0.5
             c.setLineWidth(lw)
-            x = x0 + i*cell; c.line(x, y0, x, y0+9*cell)
-            y = y0 + i*cell; c.line(x0, y, x0+9*cell, y)
+            x = x0 + i * cell
+            c.line(x, y0, x, y0 + 9 * cell)
+            y = y0 + i * cell
+            c.line(x0, y, x0 + 9 * cell, y)
         # numbers
-        c.setFont("Helvetica", dims['font_number'])
+        c.setFont("Helvetica", dims["font_number"])
         for r in range(9):
             for col in range(9):
                 v = grid[r][col]
                 if v != 0:
-                    cx = x0 + col*cell + cell/2
-                    cy = y0 + (8-r)*cell + cell/2 - dims['font_number']/3
+                    cx = x0 + col * cell + cell / 2
+                    cy = y0 + (8 - r) * cell + cell / 2 - dims["font_number"] / 3
                     c.drawCentredString(cx, cy, str(v))
-                    
+
     def draw_difficulty_badge(self, c, dims, difficulty_label):
         # Badge width is the vertical text height (font size), badge height is the vertical bar length
         # anushibin007 - We are hardcoding some values
         # here just so that we can have it constant for all the badges
-        badge_width = dims['font_diff'] + 10
+        badge_width = dims["font_diff"] + 10
         badge_height = 75
 
         # Choose Y based on difficulty
-        if difficulty_label.lower() == 'easy':
-            y = dims['diff_y_top']
-        elif difficulty_label.lower() == 'medium':
-            y = dims['diff_y_middle']
-        elif difficulty_label.lower() == 'hard':
-            y = dims['diff_y_bottom']
+        if difficulty_label.lower() == "easy":
+            y = dims["diff_y_top"]
+        elif difficulty_label.lower() == "medium":
+            y = dims["diff_y_middle"]
+        elif difficulty_label.lower() == "hard":
+            y = dims["diff_y_bottom"]
         else:
-            y = dims['diff_y_top']  # fallback
+            y = dims["diff_y_top"]  # fallback
 
         # Move badge flush to the right edge
         # The +2 is just to give that bleeding edge effect
@@ -161,13 +173,14 @@ class RelativeSudokuPDFGenerator:
         c.setFillColor(self._badge_color(difficulty_label))
         c.rect(-badge_height / 2, -badge_width / 2, badge_height, badge_width, fill=1)
         c.setFillColor(colors.white)
-        c.setFont("Helvetica-Bold", dims['font_diff'])
+        c.setFont("Helvetica-Bold", dims["font_diff"])
         c.drawCentredString(0, -badge_width * 0.2, difficulty_label.upper())
         c.restoreState()
 
-            
     def _badge_color(self, label):
-        return {'easy': colors.green, 'medium': colors.orange, 'hard': colors.red}.get(label.lower(), colors.gray)
+        return {"easy": colors.green, "medium": colors.orange, "hard": colors.red}.get(
+            label.lower(), colors.gray
+        )
 
     def wrap_text(self, c, txt, max_w, font, size):
         words, lines, line = txt.split(), [], ""
@@ -176,21 +189,23 @@ class RelativeSudokuPDFGenerator:
             if c.stringWidth(t, font, size) <= max_w:
                 line = t
             else:
-                lines.append(line); line = w
-        lines.append(line); return lines
+                lines.append(line)
+                line = w
+        lines.append(line)
+        return lines
 
     def create_page(self, c, pid, pdata, pnum):
         dims = self.compute_dimensions()
         # Title
-        c.setFont("Helvetica-Bold", dims['font_title'])
-        c.drawCentredString(self.page_width/2, dims['header_y'], "Sudoku Puzzle")
-        
+        c.setFont("Helvetica-Bold", dims["font_title"])
+        c.drawCentredString(self.page_width / 2, dims["header_y"], "Sudoku Puzzle")
+
         # ID & difficulty
         # c.setFont("Helvetica", dims['font_diff'])
         # c.drawCentredString(self.page_width/2, dims['difficulty_y'], f"{pid} ({pdata['d']})")
-        
+
         # Grid
-        self.draw_grid(c, pdata['q'], dims)
+        self.draw_grid(c, pdata["q"], dims)
         # QR
         # qr = self.generate_qr_image(pid)
         # c.drawImage(
@@ -201,16 +216,22 @@ class RelativeSudokuPDFGenerator:
         #         height=dims['qr_size'],
         #         mask='auto'
         #     )
-        
+
         # Motivational Quote
-        c.setFont("Helvetica-Oblique", dims['font_fact'])
-        c.drawCentredString(self.page_width/2, dims['margin_v'] + 25, f'"{pdata['mq']}"')
-        c.setFont("Helvetica", dims['font_fact'])
-        c.drawCentredString(self.page_width/2, dims['margin_v'] + 23 - dims['font_fact'], f'{pdata['ma']}')
-        
+        c.setFont("Helvetica-Oblique", dims["font_fact"])
+        c.drawCentredString(
+            self.page_width / 2, dims["margin_v"] + 25, f'"{pdata['mq']}"'
+        )
+        c.setFont("Helvetica", dims["font_fact"])
+        c.drawCentredString(
+            self.page_width / 2,
+            dims["margin_v"] + 23 - dims["font_fact"],
+            f"{pdata['ma']}",
+        )
+
         # Fact
         # lines = self.wrap_text(c, self.get_random_fact(), self.page_width-2*dims['margin_h'],
-                            #    "Helvetica-Oblique", dims['font_fact'])
+        #    "Helvetica-Oblique", dims['font_fact'])
         # c.setFont("Helvetica-Oblique", dims['font_fact'])
         # for i, ln in enumerate(lines):
         #     y = dims['fact_y'] + i*(dims['font_fact']+2)
@@ -219,14 +240,14 @@ class RelativeSudokuPDFGenerator:
         # Page #
         # c.setFont("Helvetica", dims['font_pagenum'])
         # c.drawCentredString(self.page_width/2, dims['page_num_y'], f"— {pnum} —")
-        
+
         # ID
-        c.setFont("Helvetica", dims['font_pagenum'])
-        c.drawCentredString(self.page_width/2, dims['page_num_y'], f"-- {pid} --")
-        
+        c.setFont("Helvetica", dims["font_pagenum"])
+        c.drawCentredString(self.page_width / 2, dims["page_num_y"], f"-- {pid} --")
+
         # Badge on right edge of page
-        self.draw_difficulty_badge(c, dims, pdata['d'])
-        
+        self.draw_difficulty_badge(c, dims, pdata["d"])
+
     def draw_small_grid(self, c, grid, x0, y0, cell):
         """Draw a small solution grid."""
         for i in range(10):
@@ -244,7 +265,7 @@ class RelativeSudokuPDFGenerator:
                 cx = x0 + col * cell + cell / 2
                 cy = y0 + (8 - r) * cell + cell / 2 - font_size / 3
                 c.drawCentredString(cx, cy, str(v))
-                
+
     def add_solutions_section(self, c, data, dims):
         """
         Render all solutions at the end:
@@ -253,17 +274,17 @@ class RelativeSudokuPDFGenerator:
           with its puzzle ID above the grid.
         """
         # Title page
-        c.setFont("Helvetica-Bold", dims['font_diff'])
-        c.drawCentredString(self.page_width / 2,
-                            self.page_height - dims['margin_v'] + 15,
-                            "Solutions")
+        c.setFont("Helvetica-Bold", dims["font_diff"])
+        c.drawCentredString(
+            self.page_width / 2, self.page_height - dims["margin_v"] + 15, "Solutions"
+        )
         # c.showPage()
 
-        sol_scale    = 0.4
-        sol_size     = dims['grid_size'] * sol_scale
-        sol_cell     = sol_size / 9
-        mh, mv       = dims['margin_h'], dims['margin_v']
-        cols, rows   = 2, 3
+        sol_scale = 0.4
+        sol_size = dims["grid_size"] * sol_scale
+        sol_cell = sol_size / 9
+        mh, mv = dims["margin_h"], dims["margin_v"]
+        cols, rows = 2, 3
 
         # Compute slot widths/heights and offsets
         slot_w = (self.page_width - 2 * mh) / cols
@@ -283,8 +304,8 @@ class RelativeSudokuPDFGenerator:
             cy = self.page_height - mv - slot_h * row - slot_h / 2
 
             # Draw puzzle ID above grid
-            c.setFont("Helvetica", dims['font_diff'])
-            text_y = cy + sol_size / 2 + dims['font_diff'] + 2
+            c.setFont("Helvetica", dims["font_diff"])
+            text_y = cy + sol_size / 2 + dims["font_diff"] + 2
             c.drawCentredString(cx, text_y, pid)
 
             # Top-left corner of grid
@@ -292,12 +313,11 @@ class RelativeSudokuPDFGenerator:
             y0 = cy - sol_size / 2
 
             # Draw the small solution grid
-            self.draw_small_grid(c, pdata['a'], x0, y0, sol_cell)
+            self.draw_small_grid(c, pdata["a"], x0, y0, sol_cell)
 
             count += 1
 
         c.showPage()
-
 
     def generate_pdf(self, json_file, output_pdf):
         with open(json_file) as f:
@@ -308,16 +328,18 @@ class RelativeSudokuPDFGenerator:
         # Draw puzzles
         for pid, pdata in data.items():
             self.create_page(c, pid, pdata, page)
-            c.showPage(); page += 1
+            c.showPage()
+            page += 1
         # Draw solutions at end
         self.add_solutions_section(c, data, dims)
         c.save()
         print(f"Generated: {output_pdf}")
 
+
 # Example usage:
 if __name__ == "__main__":
     # e.g. 4.25"×6.87" → (4.25*72, 6.87*72)
-    W, H = 4.25*inch, 6.87*inch
+    W, H = 4.25 * inch, 6.87 * inch
     # W, H = 3*inch, 4*inch
     gen = RelativeSudokuPDFGenerator(W, H)
-    gen.generate_pdf('../generated-test.json', 'generated-sudoku.pdf')
+    gen.generate_pdf("../generated-test.json", "generated-sudoku.pdf")

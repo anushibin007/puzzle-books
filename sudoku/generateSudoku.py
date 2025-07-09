@@ -17,6 +17,7 @@ Example:
 The script will output a JSON array of sudoku puzzles with the specified count and difficulty.
 """
 
+
 def is_valid(board, row, col, num):
     for x in range(9):
         if board[row][x] == num or board[x][col] == num:
@@ -27,6 +28,7 @@ def is_valid(board, row, col, num):
             if board[start_row + i][start_col + j] == num:
                 return False
     return True
+
 
 def solve_sudoku(board):
     for row in range(9):
@@ -41,13 +43,15 @@ def solve_sudoku(board):
                 return False
     return True
 
+
 def fill_diagonal_boxes(board):
     for k in range(0, 9, 3):
         nums = list(range(1, 10))
         random.shuffle(nums)
         for i in range(3):
             for j in range(3):
-                board[k+i][k+j] = nums.pop()
+                board[k + i][k + j] = nums.pop()
+
 
 def fill_remaining(board, i, j):
     if j >= 9 and i < 8:
@@ -70,19 +74,22 @@ def fill_remaining(board, i, j):
     for num in range(1, 10):
         if is_valid(board, i, j, num):
             board[i][j] = num
-            if fill_remaining(board, i, j+1):
+            if fill_remaining(board, i, j + 1):
                 return True
             board[i][j] = 0
     return False
 
+
 def generate_complete_sudoku():
-    board = [[0]*9 for _ in range(9)]
+    board = [[0] * 9 for _ in range(9)]
     fill_diagonal_boxes(board)
     fill_remaining(board, 0, 3)
     return board
 
+
 def count_solutions(board):
     count = 0
+
     def solve_count(b):
         nonlocal count
         for row in range(9):
@@ -95,13 +102,15 @@ def count_solutions(board):
                             b[row][col] = 0
                     return
         count += 1
+
     solve_count(copy.deepcopy(board))
     return count
 
+
 def remove_cells(board, difficulty):
-    if difficulty == 'easy':
+    if difficulty == "easy":
         clues = random.randint(45, 50)
-    elif difficulty == 'medium':
+    elif difficulty == "medium":
         clues = random.randint(35, 40)
     else:
         clues = random.randint(25, 30)
@@ -118,8 +127,10 @@ def remove_cells(board, difficulty):
                 cells_to_remove -= 1
     return board
 
+
 def board_to_question(board):
     return [[cell if cell != 0 else 0 for cell in row] for row in board]
+
 
 def generate_sudoku_puzzle(difficulty):
     complete = generate_complete_sudoku()
@@ -128,21 +139,23 @@ def generate_sudoku_puzzle(difficulty):
     question = board_to_question(puzzle)
     return question, complete
 
+
 def generate_sudoku_set(count, difficulty):
     result = {}
     with open("../quotes/sudoku-motivational-quotes-v1.json") as f:
-            motivational_quotes = json.load(f)
-    for i in range(1, count+1):
+        motivational_quotes = json.load(f)
+    for i in range(1, count + 1):
         question, answer = generate_sudoku_puzzle(difficulty)
         key = f"sdku-v1-q{i}"
         result[key] = {
             "q": question,
             "a": answer,
             "d": difficulty,
-            "mq": motivational_quotes[i]['q'],
-            "ma": motivational_quotes[i]['a']
+            "mq": motivational_quotes[i]["q"],
+            "ma": motivational_quotes[i]["a"],
         }
     return result
+
 
 def main():
     if len(sys.argv) != 3:
@@ -151,7 +164,7 @@ def main():
     try:
         count = int(sys.argv[1])
         difficulty = sys.argv[2].lower()
-        if difficulty not in ['easy', 'medium', 'hard']:
+        if difficulty not in ["easy", "medium", "hard"]:
             print(HELP_PROMPT)
             sys.exit(1)
     except Exception:
@@ -160,6 +173,7 @@ def main():
 
     puzzles = generate_sudoku_set(count, difficulty)
     print(json.dumps(puzzles, indent=2))
+
 
 if __name__ == "__main__":
     main()

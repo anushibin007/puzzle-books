@@ -10,8 +10,9 @@ from generateSudoku import (
     board_to_question,
     generate_sudoku_puzzle,
     generate_sudoku_set,
-    count_solutions
+    count_solutions,
 )
+
 
 class TestSudokuGenerator(unittest.TestCase):
     def test_generate_complete_sudoku_valid(self):
@@ -26,7 +27,7 @@ class TestSudokuGenerator(unittest.TestCase):
                 nums = set()
                 for i in range(3):
                     for j in range(3):
-                        nums.add(board[box_row*3 + i][box_col*3 + j])
+                        nums.add(board[box_row * 3 + i][box_col * 3 + j])
                 self.assertEqual(nums, set(range(1, 10)))
 
     def test_is_valid(self):
@@ -36,10 +37,14 @@ class TestSudokuGenerator(unittest.TestCase):
         self.assertFalse(is_valid(board, 0, 0, board[1][0]))
         self.assertFalse(is_valid(board, 0, 0, board[1][1]))
         # Placing a number not in row/col/box should be valid
-        unused = set(range(1, 10)) - {board[0][i] for i in range(9)} - {board[i][0] for i in range(9)}
+        unused = (
+            set(range(1, 10))
+            - {board[0][i] for i in range(9)}
+            - {board[i][0] for i in range(9)}
+        )
         if unused:
             num = unused.pop()
-            self.assertTrue(is_valid([[0]*9 for _ in range(9)], 0, 0, num))
+            self.assertTrue(is_valid([[0] * 9 for _ in range(9)], 0, 0, num))
 
     def test_solve_sudoku(self):
         board = generate_complete_sudoku()
@@ -52,7 +57,11 @@ class TestSudokuGenerator(unittest.TestCase):
 
     def test_remove_cells_difficulty(self):
         board = generate_complete_sudoku()
-        for difficulty, clue_range in [('easy', (45, 50)), ('medium', (35, 40)), ('hard', (25, 30))]:
+        for difficulty, clue_range in [
+            ("easy", (45, 50)),
+            ("medium", (35, 40)),
+            ("hard", (25, 30)),
+        ]:
             puzzle = copy.deepcopy(board)
             puzzle = remove_cells(puzzle, difficulty)
             num_clues = sum(cell != 0 for row in puzzle for cell in row)
@@ -71,7 +80,7 @@ class TestSudokuGenerator(unittest.TestCase):
             self.assertIsInstance(question[0][i], int)
 
     def test_generate_sudoku_puzzle_and_set(self):
-        question, answer = generate_sudoku_puzzle('easy')
+        question, answer = generate_sudoku_puzzle("easy")
         self.assertEqual(len(question), 9)
         self.assertEqual(len(answer), 9)
         self.assertTrue(all(len(row) == 9 for row in question))
@@ -80,25 +89,27 @@ class TestSudokuGenerator(unittest.TestCase):
         for i in range(9):
             self.assertEqual(set(answer[i]), set(range(1, 10)))
         # test set generation
-        puzzles = generate_sudoku_set(3, 'hard')
+        puzzles = generate_sudoku_set(3, "hard")
         self.assertEqual(len(puzzles), 3)
         for key, val in puzzles.items():
-            self.assertIn('q', val)
-            self.assertIn('a', val)
-            self.assertIn('d', val)
-            self.assertEqual(val['d'], 'hard')
+            self.assertIn("q", val)
+            self.assertIn("a", val)
+            self.assertIn("d", val)
+            self.assertEqual(val["d"], "hard")
 
     def test_invalid_arguments(self):
         # Simulate invalid argument handling
         import subprocess
         import sys
+
         result = subprocess.run(
-            [sys.executable, 'generateSudoku.py'],
-            input='',
+            [sys.executable, "generateSudoku.py"],
+            input="",
             capture_output=True,
-            text=True
+            text=True,
         )
         self.assertIn("Usage", result.stdout + result.stderr)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     unittest.main()
