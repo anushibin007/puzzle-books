@@ -2,6 +2,7 @@ import sys
 import random
 import json
 import copy
+import time
 
 HELP_PROMPT = """
 Sudoku Generator Script Usage:
@@ -148,7 +149,15 @@ def generate_sudoku_set(count, difficulty):
     for i in range(1, count + 1):
         if difficulty == "mixed":
             currentDifficulty = get_difficulty(i, count)
+        start = time.time()
         question, answer = generate_sudoku_puzzle(currentDifficulty)
+        end = time.time()
+        print(
+            f"Generated {i}/{count} ({currentDifficulty}) in {end - start:.4f}s",
+            # We are printing to STDERR because the main JSON gets printed to STDOUT.
+            # We do not want to clutter the output.
+            file=sys.stderr,
+        )
         key = f"sdku-v1-q{i}"
         result[key] = {
             "q": question,
