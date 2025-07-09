@@ -130,13 +130,17 @@ def generate_sudoku_puzzle(difficulty):
 
 def generate_sudoku_set(count, difficulty):
     result = {}
+    with open("../quotes/sudoku-motivational-quotes-v1.json") as f:
+            motivational_quotes = json.load(f)
     for i in range(1, count+1):
         question, answer = generate_sudoku_puzzle(difficulty)
         key = f"sdku-v1-q{i}"
         result[key] = {
             "q": question,
             "a": answer,
-            "d": difficulty
+            "d": difficulty,
+            "mq": motivational_quotes[i]['q'],
+            "ma": motivational_quotes[i]['a']
         }
     return result
 
