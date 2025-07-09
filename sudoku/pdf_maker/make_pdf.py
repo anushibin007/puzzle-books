@@ -342,4 +342,4 @@ if __name__ == "__main__":
     W, H = 4.25 * inch, 6.87 * inch
     # W, H = 3*inch, 4*inch
     gen = RelativeSudokuPDFGenerator(W, H)
-    gen.generate_pdf("../generated-test.json", "generated-sudoku.pdf")
+    gen.generate_pdf("../generated-mixed.json", "generated-sudoku.pdf")
