@@ -184,9 +184,10 @@ class RelativeSudokuPDFGenerator:
         # Title
         c.setFont("Helvetica-Bold", dims['font_title'])
         c.drawCentredString(self.page_width/2, dims['header_y'], "Sudoku Puzzle")
+        
         # ID & difficulty
-        c.setFont("Helvetica", dims['font_diff'])
-        c.drawCentredString(self.page_width/2, dims['difficulty_y'], f"{pid} ({pdata['d']})")
+        # c.setFont("Helvetica", dims['font_diff'])
+        # c.drawCentredString(self.page_width/2, dims['difficulty_y'], f"{pid} ({pdata['d']})")
         
         # Grid
         self.draw_grid(c, pdata['q'], dims)
@@ -200,16 +201,23 @@ class RelativeSudokuPDFGenerator:
         #         height=dims['qr_size'],
         #         mask='auto'
         #     )
+        
         # Fact
         lines = self.wrap_text(c, self.get_random_fact(), self.page_width-2*dims['margin_h'],
                                "Helvetica-Oblique", dims['font_fact'])
+        
         c.setFont("Helvetica-Oblique", dims['font_fact'])
         for i, ln in enumerate(lines):
             y = dims['fact_y'] + i*(dims['font_fact']+2)
             c.drawCentredString(self.page_width/2, y, ln)
         # Page #
+        # c.setFont("Helvetica", dims['font_pagenum'])
+        # c.drawCentredString(self.page_width/2, dims['page_num_y'], f"— {pnum} —")
+        
+        # ID
         c.setFont("Helvetica", dims['font_pagenum'])
-        c.drawCentredString(self.page_width/2, dims['page_num_y'], f"— {pnum} —")
+        c.drawCentredString(self.page_width/2, dims['page_num_y'], f"-- {pid} --")
+        
         # Badge on right edge of page
         self.draw_difficulty_badge(c, dims, pdata['d'])
         
@@ -306,4 +314,4 @@ if __name__ == "__main__":
     W, H = 4.25*inch, 6.87*inch
     # W, H = 3*inch, 4*inch
     gen = RelativeSudokuPDFGenerator(W, H)
-    gen.generate_pdf('sudoku.json', 'sudoku_relative.pdf')
+    gen.generate_pdf('../generated-test.json', 'generated-sudoku.pdf')
