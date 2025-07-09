@@ -202,14 +202,20 @@ class RelativeSudokuPDFGenerator:
         #         mask='auto'
         #     )
         
-        # Fact
-        lines = self.wrap_text(c, self.get_random_fact(), self.page_width-2*dims['margin_h'],
-                               "Helvetica-Oblique", dims['font_fact'])
-        
+        # Motivational Quote
         c.setFont("Helvetica-Oblique", dims['font_fact'])
-        for i, ln in enumerate(lines):
-            y = dims['fact_y'] + i*(dims['font_fact']+2)
-            c.drawCentredString(self.page_width/2, y, ln)
+        c.drawCentredString(self.page_width/2, dims['margin_v'] + 25, f'"{pdata['mq']}"')
+        c.setFont("Helvetica", dims['font_fact'])
+        c.drawCentredString(self.page_width/2, dims['margin_v'] + 23 - dims['font_fact'], f'{pdata['ma']}')
+        
+        # Fact
+        # lines = self.wrap_text(c, self.get_random_fact(), self.page_width-2*dims['margin_h'],
+                            #    "Helvetica-Oblique", dims['font_fact'])
+        # c.setFont("Helvetica-Oblique", dims['font_fact'])
+        # for i, ln in enumerate(lines):
+        #     y = dims['fact_y'] + i*(dims['font_fact']+2)
+        #     c.drawCentredString(self.page_width/2, y, ln)
+
         # Page #
         # c.setFont("Helvetica", dims['font_pagenum'])
         # c.drawCentredString(self.page_width/2, dims['page_num_y'], f"— {pnum} —")
