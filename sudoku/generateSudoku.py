@@ -116,9 +116,14 @@ def remove_cells(board, difficulty):
     else:
         clues = random.randint(25, 30)
     cells_to_remove = 81 - clues
-    while cells_to_remove > 0:
-        row = random.randint(0, 8)
-        col = random.randint(0, 8)
+
+    # Create and shuffle all cell positions
+    cells = [(r, c) for r in range(9) for c in range(9)]
+    random.shuffle(cells)
+
+    for row, col in cells:
+        if cells_to_remove <= 0:
+            break
         if board[row][col] != 0:
             backup = board[row][col]
             board[row][col] = 0
