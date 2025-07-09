@@ -31,7 +31,7 @@ class RelativeSudokuPDFGenerator:
             "font_difficulty": 0.03,  # 3% of page height
             "font_number": 0.04,  # 4% of page height for grid numbers
             "font_fact": 0.02,  # 2.5% of page height
-            "font_pagenum": 0.025,  # 2.5% of page height
+            "font_pagenum": 0.018,  # 2.5% of page height
         }
         self.factors = {**defaults, **(template_factors or {})}
 
@@ -243,7 +243,7 @@ class RelativeSudokuPDFGenerator:
 
         # ID
         c.setFont("Helvetica", dims["font_pagenum"])
-        c.drawCentredString(self.page_width / 2, dims["page_num_y"], f"-- {pid} --")
+        c.drawCentredString(self.page_width / 2, dims["page_num_y"], f"{pid}")
 
         # Badge on right edge of page
         self.draw_difficulty_badge(c, dims, pdata["d"])
