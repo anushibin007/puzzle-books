@@ -204,6 +204,14 @@ class RelativeSudokuPDFGenerator:
         # c.setFont("Helvetica", dims['font_diff'])
         # c.drawCentredString(self.page_width/2, dims['difficulty_y'], f"{pid} ({pdata['d']})")
 
+        # Date & Time Taken
+        c.setFont("Helvetica", dims["font_diff"])
+        c.drawCentredString(
+            self.page_width / 2,
+            dims["difficulty_y"] - 10,
+            "Date: __________ Time taken: _____",
+        )
+
         # Grid
         self.draw_grid(c, pdata["q"], dims)
         # QR
