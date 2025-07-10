@@ -194,6 +194,56 @@ class RelativeSudokuPDFGenerator:
         lines.append(line)
         return lines
 
+    def add_qr_code_page(
+        self,
+        c,
+        url,
+        qr_size=4 * inch,
+        title="Scan to visit our website",
+    ):
+        """
+        Adds a new page to the ReportLab canvas `c` with a large, centered QR code.
+
+        Args:
+            c (canvas.Canvas): The ReportLab canvas object.
+            url (str): The URL to encode in the QR code.
+            page_width (float): Width of the page in points (default: letter width).
+            page_height (float): Height of the page in points (default: letter height).
+            qr_size (float): Size of the QR code square in points.
+            title (str): Optional title to display above the QR code.
+        """
+        # Start a new page
+        c.showPage()
+
+        # Generate QR code image
+        qr = qrcode.QRCode(box_size=10, border=4)
+        qr.add_data(url)
+        qr.make(fit=True)
+        img = qr.make_image(fill_color="black", back_color="white")
+
+        # Save QR code image to BytesIO buffer
+        buffer = BytesIO()
+        img.save(buffer, format="PNG")
+        buffer.seek(0)
+
+        # Wrap buffer in ImageReader for ReportLab
+        qr_img = ImageReader(buffer)
+
+        # Calculate position to center the QR code
+        x = (self.page_width - qr_size) / 2
+        y = (self.page_height - qr_size) / 2
+
+        # Draw the QR code image on the canvas
+        c.drawImage(qr_img, x, y, width=qr_size, height=qr_size, mask="auto")
+
+        # Optionally, add a title or text above the QR code
+        if title:
+            c.setFont("Helvetica-Bold", 18)
+            c.drawCentredString(self.page_width / 2, y + qr_size + 30, title)
+
+        c.setFont("Helvetica", 14)
+        c.drawCentredString(self.page_width / 2, y - 30, url)
+
     def create_page(self, c, pid, pdata, pnum):
         dims = self.compute_dimensions()
         # Title
@@ -340,6 +390,12 @@ class RelativeSudokuPDFGenerator:
             page += 1
         # Draw solutions at end
         self.add_solutions_section(c, data, dims)
+        self.add_qr_code_page(
+            c,
+            "https://book.fastorial.dev/puzzle-books?category=sudoku&volume=1",
+            qr_size=4 * inch,
+            title="Find more Puzzles here:",
+        )
         c.save()
         print(f"Generated: {output_pdf}")
 
