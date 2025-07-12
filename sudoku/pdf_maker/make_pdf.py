@@ -6,6 +6,7 @@ from reportlab.lib.units import inch
 from reportlab.pdfgen import canvas
 from reportlab.lib.utils import ImageReader
 from reportlab.lib import colors
+from PyPDF2 import PdfReader, PdfWriter
 
 
 class RelativeSudokuPDFGenerator:
@@ -400,10 +401,44 @@ class RelativeSudokuPDFGenerator:
         print(f"Generated: {output_pdf}")
 
 
+def append_covers(front_cover_path, back_cover_path, main_pdf_path, output_pdf_path):
+    writer = PdfWriter()
+
+    # Add front cover
+    with open(front_cover_path, "rb") as f_front:
+        front_reader = PdfReader(f_front)
+        for page in front_reader.pages:
+            writer.add_page(page)
+
+    # Add main book
+    with open(main_pdf_path, "rb") as f_main:
+        main_reader = PdfReader(f_main)
+        for page in main_reader.pages:
+            writer.add_page(page)
+
+    # Add back cover
+    with open(back_cover_path, "rb") as f_back:
+        back_reader = PdfReader(f_back)
+        for page in back_reader.pages:
+            writer.add_page(page)
+
+    # Write the final PDF
+    with open(output_pdf_path, "wb") as f_out:
+        writer.write(f_out)
+
+
 # Example usage:
 if __name__ == "__main__":
     # e.g. 4.25"×6.87" → (4.25*72, 6.87*72)
     W, H = 4.25 * inch, 6.87 * inch
     # W, H = 3*inch, 4*inch
     gen = RelativeSudokuPDFGenerator(W, H)
-    gen.generate_pdf("../generated-mixed.json", "generated-sudoku.pdf")
+    gen.generate_pdf("../generated-mixed.json", "puzzles-content.pdf")
+
+    # Append covers
+    front_cover = "Book Cover - Front.pdf"
+    back_cover = "Book Cover - Back.pdf"
+    main_pdf = "puzzles-content.pdf"
+    output_pdf = "generated-sudoku.pdf"
+
+    append_covers(front_cover, back_cover, main_pdf, output_pdf)
