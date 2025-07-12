@@ -8,6 +8,6 @@
     -   [ ] Put the ID in the header
 -   [x] Render link to site properly in the last page
 -   [ ] Add instructions page in the beginning
--   [ ] Remove quotes in quotes
+-   [x] Remove quotes in quotes
 -   [ ] Finalize the store website
     -   [ ] cutelittle.store INR 84 per year / 152 per year

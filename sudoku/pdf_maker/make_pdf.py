@@ -279,13 +279,13 @@ class RelativeSudokuPDFGenerator:
         # Motivational Quote
         c.setFont("Helvetica-Oblique", dims["font_fact"])
         c.drawCentredString(
-            self.page_width / 2, dims["margin_v"] + 25, f'"{pdata['mq']}"'
+            self.page_width / 2, dims["margin_v"] + 25, f"{pdata['mq']}"
         )
         c.setFont("Helvetica", dims["font_fact"])
         c.drawCentredString(
             self.page_width / 2,
-            dims["margin_v"] + 23 - dims["font_fact"],
-            f"{pdata['ma']}",
+            dims["margin_v"] + 22 - dims["font_fact"],
+            f" - {pdata['ma']}",
         )
 
         # Fact
