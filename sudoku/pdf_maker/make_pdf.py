@@ -433,12 +433,12 @@ if __name__ == "__main__":
     W, H = 4.25 * inch, 6.87 * inch
     # W, H = 3*inch, 4*inch
     gen = RelativeSudokuPDFGenerator(W, H)
-    gen.generate_pdf("../generated-mixed.json", "puzzles-content.pdf")
+    gen.generate_pdf("../generated-mixed.json", "generated-puzzles-content.pdf")
 
     # Append covers
     front_cover = "Book Cover - Front.pdf"
     back_cover = "Book Cover - Back.pdf"
-    main_pdf = "puzzles-content.pdf"
+    main_pdf = "generated-puzzles-content.pdf"
     output_pdf = "generated-sudoku.pdf"
 
     append_covers(front_cover, back_cover, main_pdf, output_pdf)
