@@ -28,7 +28,7 @@ class RelativeSudokuPDFGenerator:
             "qr_scale": 0.12,  # 12% of page width for QR-code
             "fact_height": 0.06,  # 6% of page height for fact area
             "page_num_height": 0.03,  # 3% of page height for page number area
-            "font_title": 0.05,  # 5% of page height as font size
+            "font_title": 0.03,  # 5% of page height as font size
             "font_difficulty": 0.03,  # 3% of page height
             "font_number": 0.04,  # 4% of page height for grid numbers
             "font_fact": 0.02,  # 2.5% of page height
@@ -247,9 +247,9 @@ class RelativeSudokuPDFGenerator:
 
     def create_page(self, c, pid, pdata, pnum):
         dims = self.compute_dimensions()
-        # Title
-        c.setFont("Helvetica-Bold", dims["font_title"])
-        c.drawCentredString(self.page_width / 2, dims["header_y"], "Sudoku Puzzle")
+        # Title (show the ID as title)
+        c.setFont("Helvetica", dims["font_title"])
+        c.drawCentredString(self.page_width / 2, dims["header_y"], f"{pid}")
 
         # ID & difficulty
         # c.setFont("Helvetica", dims['font_diff'])
@@ -279,12 +279,12 @@ class RelativeSudokuPDFGenerator:
         # Motivational Quote
         c.setFont("Helvetica-Oblique", dims["font_fact"])
         c.drawCentredString(
-            self.page_width / 2, dims["margin_v"] + 25, f"{pdata['mq']}"
+            self.page_width / 2, dims["margin_v"] - 15, f"{pdata['mq']}"
         )
         c.setFont("Helvetica", dims["font_fact"])
         c.drawCentredString(
             self.page_width / 2,
-            dims["margin_v"] + 22 - dims["font_fact"],
+            dims["margin_v"] - 18 - dims["font_fact"],
             f" - {pdata['ma']}",
         )
 
@@ -300,9 +300,9 @@ class RelativeSudokuPDFGenerator:
         # c.setFont("Helvetica", dims['font_pagenum'])
         # c.drawCentredString(self.page_width/2, dims['page_num_y'], f"— {pnum} —")
 
-        # ID
-        c.setFont("Helvetica", dims["font_pagenum"])
-        c.drawCentredString(self.page_width / 2, dims["page_num_y"], f"{pid}")
+        # ID - Not needed anymore because we are showing the ID on the top of the page
+        # c.setFont("Helvetica", dims["font_pagenum"])
+        # c.drawCentredString(self.page_width / 2, dims["page_num_y"], f"{pid}")
 
         # Badge on right edge of page
         self.draw_difficulty_badge(c, dims, pdata["d"])
