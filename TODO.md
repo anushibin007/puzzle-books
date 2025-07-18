@@ -7,7 +7,7 @@
 -   [x] Figure out a better title for the book and each pages (instead of "Sudoku Puzzle")
     -   [x] Put the ID in the header
 -   [x] Render link to site properly in the last page
--   [ ] Add instructions page in the beginning
+-   [x] Add instructions page in the beginning
 -   [x] Remove quotes in quotes
 -   [ ] Finalize the store website and add it to both the cover and PDF
     -   [ ] cutelittle.store INR 84 per year / 152 per year
