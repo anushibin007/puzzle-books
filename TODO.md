@@ -12,3 +12,4 @@
 -   [ ] Finalize the store website and add it to both the cover and PDF
     -   [ ] cutelittle.store INR 84 per year / 152 per year
 -   [ ] Add more book covers like "Sudoku at lunch" at the back cover
+-   [x] The difficulty badge should be on alternating edges

@@ -146,7 +146,7 @@ class RelativeSudokuPDFGenerator:
                     cy = y0 + (8 - r) * cell + cell / 2 - dims["font_number"] / 3
                     c.drawCentredString(cx, cy, str(v))
 
-    def draw_difficulty_badge(self, c, dims, difficulty_label):
+    def draw_difficulty_badge(self, c, dims, difficulty_label, pnum):
         # Badge width is the vertical text height (font size), badge height is the vertical bar length
         # anushibin007 - We are hardcoding some values
         # here just so that we can have it constant for all the badges
@@ -163,9 +163,13 @@ class RelativeSudokuPDFGenerator:
         else:
             y = dims["diff_y_top"]  # fallback
 
-        # Move badge flush to the right edge
-        # The +2 is just to give that bleeding edge effect
-        x = self.page_width - badge_width + 2
+        # For odd numbers, move badge flush to the right edge
+        # Else, left side of the grid
+        if pnum % 2 == 1:
+            # The +2 is just to give that bleeding edge effect
+            x = self.page_width - badge_width
+        else:
+            x = -2
 
         # Draw vertical badge (rotated)
         c.saveState()
@@ -305,7 +309,7 @@ class RelativeSudokuPDFGenerator:
         # c.drawCentredString(self.page_width / 2, dims["page_num_y"], f"{pid}")
 
         # Badge on right edge of page
-        self.draw_difficulty_badge(c, dims, pdata["d"])
+        self.draw_difficulty_badge(c, dims, pdata["d"], pnum)
 
     def draw_small_grid(self, c, grid, x0, y0, cell):
         """Draw a small solution grid."""
