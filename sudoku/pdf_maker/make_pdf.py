@@ -406,13 +406,21 @@ class RelativeSudokuPDFGenerator:
         print(f"Generated: {output_pdf}")
 
 
-def append_covers(front_cover_path, back_cover_path, main_pdf_path, output_pdf_path):
+def append_covers(
+    front_cover_path, preface_page, main_pdf_path, back_cover_path, output_pdf_path
+):
     writer = PdfWriter()
 
     # Add front cover
     with open(front_cover_path, "rb") as f_front:
         front_reader = PdfReader(f_front)
         for page in front_reader.pages:
+            writer.add_page(page)
+
+    # Add preface pages
+    with open(preface_page, "rb") as f_front:
+        preface_page_reader = PdfReader(f_front)
+        for page in preface_page_reader.pages:
             writer.add_page(page)
 
     # Add main book
@@ -440,10 +448,14 @@ if __name__ == "__main__":
     gen = RelativeSudokuPDFGenerator(W, H)
     gen.generate_pdf("../generated-mixed.json", "generated-puzzles-content.pdf")
 
-    # Append covers
-    front_cover = "Book Cover - Front.pdf"
-    back_cover = "Book Cover - Back.pdf"
+    # Append covers and other premade pages
+    premade_pages_root_dir = "./premade"
+    front_cover = f"{premade_pages_root_dir}/Book Cover - Front.pdf"
+    preface_page = f"{premade_pages_root_dir}/Preface.pdf"
     main_pdf = "generated-puzzles-content.pdf"
+    back_cover = f"{premade_pages_root_dir}/Book Cover - Back.pdf"
+
+    # Final merged PDF
     output_pdf = "generated-sudoku.pdf"
 
-    append_covers(front_cover, back_cover, main_pdf, output_pdf)
+    append_covers(front_cover, preface_page, main_pdf, back_cover, output_pdf)

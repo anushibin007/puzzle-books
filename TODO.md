@@ -15,4 +15,4 @@
 -   [x] The difficulty badge should be on alternating edges
 -   [x] (WON'T DO) Add difficulty tag to solns. Won't do because it is too complicated to align the tag gracefully
 -   [ ] Remove empty page before QR
--   [ ] Add a "How to Sudoku" page
+-   [x] Add a "How to Sudoku" page
