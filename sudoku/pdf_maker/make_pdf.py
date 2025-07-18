@@ -246,8 +246,9 @@ class RelativeSudokuPDFGenerator:
             c.setFont("Helvetica-Bold", 18)
             c.drawCentredString(self.page_width / 2, y + qr_size + 30, title)
 
-        c.setFont("Helvetica", 18)
-        c.drawCentredString(self.page_width / 2, y - 30, url)
+        # Print the URL at the bottom of the page
+        # c.setFont("Helvetica", 18)
+        # c.drawCentredString(self.page_width / 2, y - 30, url)
 
     def create_page(self, c, pid, pdata, pnum):
         dims = self.compute_dimensions()
@@ -397,9 +398,9 @@ class RelativeSudokuPDFGenerator:
         self.add_solutions_section(c, data, dims)
         self.add_qr_code_page(
             c,
-            "https://cutelittle.store/",
+            "https://books.fastorial.dev/?utm_source=book&utm_medium=qr_code&utm_campaign=sdku-v1",
             qr_size=4 * inch,
-            title="Find more Puzzles here:",
+            title="Scan for more puzzles and fun",
         )
         c.save()
         print(f"Generated: {output_pdf}")
