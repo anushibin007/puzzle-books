@@ -381,7 +381,8 @@ class RelativeSudokuPDFGenerator:
 
             count += 1
 
-        c.showPage()
+        # Use this if you need an extra page after all the solutions
+        # c.showPage()
 
     def generate_pdf(self, json_file, output_pdf):
         with open(json_file) as f:

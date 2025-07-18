@@ -14,5 +14,5 @@
 -   [ ] Add more book covers like "Sudoku at lunch" at the back cover
 -   [x] The difficulty badge should be on alternating edges
 -   [x] (WON'T DO) Add difficulty tag to solns. Won't do because it is too complicated to align the tag gracefully
--   [ ] Remove empty page before QR
+-   [x] Remove empty page before QR
 -   [x] Add a "How to Sudoku" page
