@@ -13,3 +13,6 @@
     -   [ ] cutelittle.store INR 84 per year / 152 per year
 -   [ ] Add more book covers like "Sudoku at lunch" at the back cover
 -   [x] The difficulty badge should be on alternating edges
+-   [ ] Add difficulty tag to solns
+-   [ ] Remove empty page before QR
+-   [ ] Add a "How to Sudoku" page
