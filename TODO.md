@@ -17,7 +17,7 @@
 -   [x] Remove empty page before QR
 -   [x] Add a "How to Sudoku" page
 -   [x] Make the numbers bold in the cells
--   [ ] Refine ID
+-   [x] Refine ID
 -   [ ] Remove date time fields
 -   [ ] In the solutions, try to make the filled part bold and the unfilled normal
 -   [ ] Put available difficulties on the cover

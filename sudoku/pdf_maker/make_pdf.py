@@ -254,7 +254,7 @@ class RelativeSudokuPDFGenerator:
         dims = self.compute_dimensions()
         # Title (show the ID as title)
         c.setFont("Helvetica", dims["font_title"])
-        c.drawCentredString(self.page_width / 2, dims["header_y"], f"{pid}")
+        c.drawCentredString(self.page_width / 2, dims["header_y"], f"{pnum}")
 
         # ID & difficulty
         # c.setFont("Helvetica", dims['font_diff'])
@@ -368,9 +368,9 @@ class RelativeSudokuPDFGenerator:
             cy = self.page_height - mv - slot_h * row - slot_h / 2
 
             # Draw puzzle ID above grid
-            c.setFont("Helvetica", dims["font_diff"])
-            text_y = cy + sol_size / 2 + dims["font_diff"] + 2
-            c.drawCentredString(cx, text_y, pid)
+            c.setFont("Helvetica", dims["font_diff"] - 5)
+            text_y = cy + sol_size / 2 + dims["font_diff"] - 3
+            c.drawCentredString(cx, text_y, f"{count + 1}")
 
             # Top-left corner of grid
             x0 = cx - sol_size / 2
