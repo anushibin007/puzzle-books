@@ -137,7 +137,7 @@ class RelativeSudokuPDFGenerator:
             y = y0 + i * cell
             c.line(x0, y, x0 + 9 * cell, y)
         # numbers
-        c.setFont("Helvetica", dims["font_number"])
+        c.setFont("Helvetica-Bold", dims["font_number"])
         for r in range(9):
             for col in range(9):
                 v = grid[r][col]

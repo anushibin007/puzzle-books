@@ -16,7 +16,7 @@
 -   [x] (WON'T DO) Add difficulty tag to solns. Won't do because it is too complicated to align the tag gracefully
 -   [x] Remove empty page before QR
 -   [x] Add a "How to Sudoku" page
--   [ ] Make the numbers bold in the cells
+-   [x] Make the numbers bold in the cells
 -   [ ] Refine ID
 -   [ ] Remove date time fields
 -   [ ] In the solutions, try to make the filled part bold and the unfilled normal
