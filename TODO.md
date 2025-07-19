@@ -20,4 +20,4 @@
 -   [x] Refine ID
 -   [x] Remove date time fields
 -   [x] In the solutions, try to make the filled part bold and the unfilled normal
--   [ ] Put available difficulties on the cover
+-   [x] Put available difficulties on the cover
