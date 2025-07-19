@@ -316,7 +316,7 @@ class RelativeSudokuPDFGenerator:
         # Badge on right edge of page
         self.draw_difficulty_badge(c, dims, pdata["d"], pnum)
 
-    def draw_small_grid(self, c, grid, x0, y0, cell):
+    def draw_small_grid(self, c, grid_question, grid_answer, x0, y0, cell):
         """Draw a small solution grid."""
         for i in range(10):
             lw = 1 if i % 3 == 0 else 0.3
@@ -326,10 +326,17 @@ class RelativeSudokuPDFGenerator:
             yh = y0 + i * cell
             c.line(x0, yh, x0 + 9 * cell, yh)
         font_size = cell * 0.6
-        c.setFont("Helvetica", font_size)
         for r in range(9):
             for col in range(9):
-                v = grid[r][col]
+                # Calculate the font size based on whether the
+                # number was present in the question or not
+                if grid_question[r][col] == 0:
+                    # Make it bold if the number was present
+                    c.setFont("Helvetica-Bold", font_size)
+                else:
+                    # Make it normal and smaller if this is an answer cell
+                    c.setFont("Helvetica", font_size * 0.8)
+                v = grid_answer[r][col]
                 cx = x0 + col * cell + cell / 2
                 cy = y0 + (8 - r) * cell + cell / 2 - font_size / 3
                 c.drawCentredString(cx, cy, str(v))
@@ -381,7 +388,7 @@ class RelativeSudokuPDFGenerator:
             y0 = cy - sol_size / 2
 
             # Draw the small solution grid
-            self.draw_small_grid(c, pdata["a"], x0, y0, sol_cell)
+            self.draw_small_grid(c, pdata["q"], pdata["a"], x0, y0, sol_cell)
 
             count += 1
 
