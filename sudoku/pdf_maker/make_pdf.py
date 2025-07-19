@@ -282,8 +282,10 @@ class RelativeSudokuPDFGenerator:
         #     )
 
         # Scretchpad title
-        c.setFont("Helvetica", dims["font_fact"])
-        c.drawCentredString(self.page_width / 6, dims["grid_y"] - 25, "Working area")
+        c.setFont("Helvetica-Oblique", dims["font_fact"] * 0.7)
+        c.drawCentredString(
+            self.page_width / 2, dims["grid_y"] - 15, "jot your thoughts here"
+        )
 
         # Motivational Quote
         c.setFont("Helvetica-Oblique", dims["font_fact"])
