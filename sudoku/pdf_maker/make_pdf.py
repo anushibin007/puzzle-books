@@ -253,7 +253,7 @@ class RelativeSudokuPDFGenerator:
     def create_page(self, c, pid, pdata, pnum):
         dims = self.compute_dimensions()
         # Title (show the ID as title)
-        c.setFont("Helvetica", dims["font_title"])
+        c.setFont("Helvetica-Bold", dims["font_title"])
         c.drawCentredString(self.page_width / 2, dims["header_y"], f"{pnum}")
 
         # ID & difficulty
