@@ -106,7 +106,7 @@ class RelativeSudokuPDFGenerator:
             "header_y": header_y,
             "difficulty_y": ph - mv - ph * f["title_height"],
             "grid_x": (pw - gs) / 2,
-            "grid_y": (ph - gs) / 2,
+            "grid_y": (ph - gs) / 2 + 70,
             "qr_size": pw * f["qr_scale"],
             "qr_x": pw - mh - pw * f["qr_scale"],
             "fact_y": mv + ph * f["page_num_height"],
@@ -261,12 +261,12 @@ class RelativeSudokuPDFGenerator:
         # c.drawCentredString(self.page_width/2, dims['difficulty_y'], f"{pid} ({pdata['d']})")
 
         # Date & Time Taken
-        c.setFont("Helvetica", dims["font_diff"])
-        c.drawCentredString(
-            self.page_width / 2,
-            dims["difficulty_y"] - 10,
-            "Date: __________ Time taken: _____",
-        )
+        # c.setFont("Helvetica", dims["font_diff"])
+        # c.drawCentredString(
+        #     self.page_width / 2,
+        #     dims["difficulty_y"] - 10,
+        #     "Date: __________ Time taken: _____",
+        # )
 
         # Grid
         self.draw_grid(c, pdata["q"], dims)
@@ -280,6 +280,10 @@ class RelativeSudokuPDFGenerator:
         #         height=dims['qr_size'],
         #         mask='auto'
         #     )
+
+        # Scretchpad title
+        c.setFont("Helvetica", dims["font_fact"])
+        c.drawCentredString(self.page_width / 6, dims["grid_y"] - 25, "Working area")
 
         # Motivational Quote
         c.setFont("Helvetica-Oblique", dims["font_fact"])
